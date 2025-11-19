@@ -2,16 +2,24 @@ const express = require("express");
 const eventdetailRoutes = express.Router();
 const eventdetailControllers = require("../controllers/eventControllers");
 const authenticate = require("../middleware/authMiddleware");
-
-eventdetailRoutes.post("/", authenticate, eventdetailControllers.CreateEvent);
+const authorizeRoles = require("../middleware/roleMiddleware");
+eventdetailRoutes.post(
+  "/",
+  authenticate,
+  authorizeRoles("admin"),
+  eventdetailControllers.CreateEvent
+);
 eventdetailRoutes.get(
   "/upcomingEvent",
   authenticate,
+
   eventdetailControllers.getUpcomingEvent
 );
 eventdetailRoutes.get(
   "/:id/stats",
   authenticate,
+  authorizeRoles("admin"),
+  authorizeRoles("admin"),
   eventdetailControllers.getStats
 );
 eventdetailRoutes.get(

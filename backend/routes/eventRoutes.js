@@ -1,11 +1,17 @@
 const express = require("express");
 const eventRoutes = express.Router();
 const eventControllers = require("../controllers/registrationControllers");
-
-eventRoutes.post("/register/:id", authenticate, eventControllers.registerUser);
+const authorizeRoles = require("../middleware/roleMiddleware");
+eventRoutes.post(
+  "/register/:id",
+  authenticate,
+  authorizeRoles("user"),
+  eventControllers.registerUser
+);
 eventRoutes.post(
   "/:id/cancel",
   authenticate,
+  authorizeRoles("user"),
   eventControllers.cancelRegistration
 );
 
